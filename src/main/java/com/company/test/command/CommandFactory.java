@@ -23,7 +23,7 @@ public class CommandFactory {
         this.unitConverter = unitConverter;
     }
 
-    public Command createByKeyword(final CommandName commandName) {
+    public Command createByName(final CommandName commandName) {
         if (commandName == CommandName.SPEED_CHECK) {
             return new SpeedCheckCommand(
                     new ConfigRangeReader(configPath, serializer), scanner, unitConverter);

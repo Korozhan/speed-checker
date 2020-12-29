@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.Scanner;
 
 import static java.util.Optional.ofNullable;
@@ -47,20 +48,29 @@ public class SpeedCheckerApplication {
 
         final CommandFactory commandFactory = new CommandFactory(configPath, scanner, serializer, unitConverter);
 
-        final String configContent = new String(Files.readAllBytes(configPath), StandardCharsets.UTF_8);
-        if (configContent.trim().isEmpty()) {
-            commandFactory.createByKeyword(CommandName.CONFIGURE).run();
+        if (isEmptyConfiguration(configPath)) {
+            commandFactory.createByName(CommandName.CONFIGURE).run();
         } else {
-            commandFactory.createByKeyword(parseCommandKeyword(args)).run();
+            final Optional<CommandName> commandName = parseCommandName(args);
+            if (commandName.isPresent()) {
+                commandFactory.createByName(commandName.get()).run();
+            } else {
+                System.out.println("Неизвестная команда, ознакомьтесь с инструкцией.");
+                commandFactory.createByName(CommandName.HELP).run();
+            }
         }
     }
 
-    private static CommandName parseCommandKeyword(final String[] args) {
+    private static boolean isEmptyConfiguration(final Path configPath) throws IOException {
+        final String configContent = new String(Files.readAllBytes(configPath), StandardCharsets.UTF_8);
+        return configContent.trim().isEmpty();
+    }
+
+    private static Optional<CommandName> parseCommandName(final String[] args) {
         final String keyword = ofNullable(args)
                 .filter(it -> it.length > 0)
                 .map(it -> it[0])
                 .orElse(CommandName.SPEED_CHECK.getKeyword());
-        return CommandName.findByKeyword(keyword).orElseThrow(() ->
-                new IllegalArgumentException("Unknown command. Please check help"));
+        return CommandName.findByKeyword(keyword);
     }
 }
