@@ -19,7 +19,7 @@ import static java.util.Optional.ofNullable;
 public class SpeedCheckerApplication {
 
     private static Path createConfigFile() {
-        final Path path = Paths.get(System.getProperty("user.home"), ".speed-checker.properties");
+        final Path path = Paths.get(System.getProperty("user.home"), ".speed-checker");
         if (path.toFile().exists()) {
             return path;
         }

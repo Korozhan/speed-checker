@@ -8,9 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toSet;
 
 public class ConfigRangeReader implements RangeReader {
     private final Path configPath;
@@ -26,7 +26,7 @@ public class ConfigRangeReader implements RangeReader {
         try {
             return Files.readAllLines(configPath, StandardCharsets.UTF_8).stream()
                     .map(serializer::deserialize)
-                    .collect(Collectors.toSet());
+                    .collect(toSet());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
