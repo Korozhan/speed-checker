@@ -1,7 +1,7 @@
 package com.company.test.command;
 
 import com.company.test.reader.RangeReader;
-import com.company.test.serialization.RangeSerializer;
+import com.company.test.serializer.RangeSerializer;
 
 import java.io.IOException;
 import java.io.PrintWriter;

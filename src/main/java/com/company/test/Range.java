@@ -1,5 +1,7 @@
 package com.company.test;
 
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
 public class Range {
@@ -31,5 +33,29 @@ public class Range {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Range range = (Range) o;
+        return start == range.start &&
+                end == range.end &&
+                Objects.equals(description, range.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, end, description);
+    }
+
+    @Override
+    public String toString() {
+        return "Range{" +
+                "start=" + start +
+                ", end=" + end +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

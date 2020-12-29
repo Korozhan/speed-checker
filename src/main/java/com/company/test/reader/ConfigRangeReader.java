@@ -1,7 +1,7 @@
 package com.company.test.reader;
 
 import com.company.test.Range;
-import com.company.test.serialization.RangeSerializer;
+import com.company.test.serializer.RangeSerializer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

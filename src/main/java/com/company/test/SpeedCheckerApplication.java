@@ -2,9 +2,9 @@ package com.company.test;
 
 import com.company.test.command.CommandFactory;
 import com.company.test.command.CommandName;
-import com.company.test.command.UnitConverter;
-import com.company.test.serialization.CsvRangeSerializer;
-import com.company.test.serialization.RangeSerializer;
+import com.company.test.command.UnitsConverter;
+import com.company.test.serializer.CsvRangeSerializer;
+import com.company.test.serializer.RangeSerializer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -42,11 +42,11 @@ public class SpeedCheckerApplication {
     public static void main(String[] args) throws IOException {
 
         final Path configPath = resolveConfigPath();
-        final UnitConverter unitConverter = new UnitConverter();
+        final UnitsConverter unitsConverter = new UnitsConverter();
         final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         final RangeSerializer serializer = new CsvRangeSerializer();
 
-        final CommandFactory commandFactory = new CommandFactory(configPath, scanner, serializer, unitConverter);
+        final CommandFactory commandFactory = new CommandFactory(configPath, scanner, serializer, unitsConverter);
 
         if (isEmptyConfiguration(configPath)) {
             commandFactory.createByName(CommandName.CONFIGURE).run();

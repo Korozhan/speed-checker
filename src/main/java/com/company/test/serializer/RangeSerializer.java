@@ -1,4 +1,4 @@
-package com.company.test.serialization;
+package com.company.test.serializer;
 
 import com.company.test.Range;
 

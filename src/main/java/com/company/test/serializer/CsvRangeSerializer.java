@@ -1,4 +1,4 @@
-package com.company.test.serialization;
+package com.company.test.serializer;
 
 import com.company.test.Range;
 
@@ -8,7 +8,7 @@ public class CsvRangeSerializer implements RangeSerializer {
 
     @Override
     public String serialize(final Range range) {
-        return range.getStart() + "," + range.getEnd() + "," + range.getDescription();
+        return range.toString();
     }
 
     @Override
