@@ -19,13 +19,12 @@ public class ConsoleRangeReader implements RangeReader {
     public List<Range> read() {
         interaction.message("Нужно задать диапазоны для корректной работы программы\n");
         final List<Range> ranges = new ArrayList<>();
-        boolean oneMoreRange = Boolean.TRUE;
-        while (oneMoreRange) {
+        while (true) {
             createRange(ranges);
             final String answer = interaction.askForString("Добавить еще диапазон? (Y/n): ").trim();//"[yYnN]"
             if (answer.equalsIgnoreCase("n")) {
                 createLastRange(ranges);
-                oneMoreRange = Boolean.FALSE;
+                break;
             }
         }
         return ranges;

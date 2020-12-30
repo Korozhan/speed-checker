@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 
 public class ConfigRangeReader implements RangeReader {
     private final Path configPath;
@@ -22,11 +22,11 @@ public class ConfigRangeReader implements RangeReader {
     }
 
     @Override
-    public Set<Range> read() {
+    public List<Range> read() {
         try {
             return Files.readAllLines(configPath, StandardCharsets.UTF_8).stream()
                     .map(serializer::deserialize)
-                    .collect(toSet());
+                    .collect(toList());
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
