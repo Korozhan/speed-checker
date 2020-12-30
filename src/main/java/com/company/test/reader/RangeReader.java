@@ -2,8 +2,8 @@ package com.company.test.reader;
 
 import com.company.test.Range;
 
-import java.util.Set;
+import java.util.List;
 
 public interface RangeReader {
-    Set<Range> read();
+    List<Range> read();
 }

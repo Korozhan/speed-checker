@@ -1,6 +1,7 @@
 package com.company.test.command;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public enum CommandName {
     HELP("help"),
@@ -14,12 +15,9 @@ public enum CommandName {
     }
 
     public static Optional<CommandName> findByKeyword(final String name) {
-        for (final CommandName cmd : values()) {
-            if (cmd.getKeyword().equalsIgnoreCase(name)) {
-                return Optional.of(cmd);
-            }
-        }
-        return Optional.empty();
+        return Stream.of(values())
+                .filter(cmd -> cmd.getKeyword().equalsIgnoreCase(name))
+                .findFirst();
     }
 
     public String getKeyword() {

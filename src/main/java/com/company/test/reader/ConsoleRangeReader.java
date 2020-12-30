@@ -3,8 +3,8 @@ package com.company.test.reader;
 import com.company.test.Range;
 import com.company.test.user.UserInteraction;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,24 +16,46 @@ public class ConsoleRangeReader implements RangeReader {
     }
 
     @Override
-    public Set<Range> read() {
+    public List<Range> read() {
         interaction.message("Нужно задать диапазоны для корректной работы программы\n");
-        long start = 0;
-        final Set<Range> ranges = new HashSet<>();
-        for (int i = 1; ; i++) {
-            interaction.message("Создание " + i + " диапазона. Нижняя граница диапазона времени в секундах " + start + "\n");
-            long end = interaction.askForNumber("\tукажите верхнюю границу диапазона времени(больше " + start + " секунд): ");
-            String description = interaction.askForString("\tукажите название диапазона: ");
+        final List<Range> ranges = new ArrayList<>();
+        boolean oneMoreRange = Boolean.TRUE;
+        while (oneMoreRange) {
+            createRange(ranges);
             final String answer = interaction.askForString("Добавить еще диапазон? (Y/n): ").trim();//"[yYnN]"
-
-            ranges.add(new Range(start, end, description));
-            start = end;
             if (answer.equalsIgnoreCase("n")) {
-                description = interaction.askForString("\tукажите название последнего " + (i + 1) + " диапазона времени(больше " + start + " секунд): ");
-                ranges.add(new Range(start, Long.MAX_VALUE, description));
-                break;
+                createLastRange(ranges);
+                oneMoreRange = Boolean.FALSE;
             }
         }
         return ranges;
+    }
+
+    private void createLastRange(final List<Range> ranges) {
+        final long start = getLastEnd(ranges);
+        final String description = interaction.askForString("\tукажите название для последнего диапазона времени(больше " + start + " секунд): ");
+        addRange(ranges, Long.MAX_VALUE, description);
+    }
+
+    private void createRange(final List<Range> ranges) {
+        final long start = getLastEnd(ranges);
+        interaction.message("Создание диапазона. Нижняя граница диапазона времени в секундах " + start + "\n");
+        final long end = interaction.askForNumber("\tукажите верхнюю границу диапазона времени(больше " + start + " секунд): ");
+        final String description = interaction.askForString("\tукажите название для диапазона: ");
+
+        addRange(ranges, end, description);
+    }
+
+    private void addRange(final List<Range> ranges, final long end, final String description) {
+        final long start = getLastEnd(ranges);
+
+        final Range range = new Range(start, end, description);
+        if (!ranges.contains(range)) {
+            ranges.add(range);
+        }
+    }
+
+    private long getLastEnd(final List<Range> ranges) {
+        return ranges.isEmpty() ? 0 : ranges.get(ranges.size() - 1).getEnd();
     }
 }
