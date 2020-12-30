@@ -8,7 +8,7 @@ public class CsvRangeSerializer implements RangeSerializer {
 
     @Override
     public String serialize(final Range range) {
-        return range.toString();
+        return range.getStart() + "," + range.getEnd() + "," + range.getDescription();
     }
 
     @Override

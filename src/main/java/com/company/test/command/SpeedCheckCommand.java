@@ -2,8 +2,8 @@ package com.company.test.command;
 
 import com.company.test.Range;
 import com.company.test.reader.RangeReader;
+import com.company.test.user.UserInteraction;
 
-import java.util.Scanner;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -12,14 +12,14 @@ import static java.util.stream.Collectors.joining;
 public class SpeedCheckCommand implements Command {
 
     private final RangeReader rangeReader;
-    private final Scanner scanner;
+    private final UserInteraction interaction;
     private final UnitsConverter unitsConverter;
 
     public SpeedCheckCommand(final RangeReader rangeReader,
-                             final Scanner scanner,
+                             final UserInteraction interaction,
                              final UnitsConverter unitsConverter) {
         this.rangeReader = requireNonNull(rangeReader, "rangeReader is null");
-        this.scanner = requireNonNull(scanner, "scanner is null");
+        this.interaction = requireNonNull(interaction, "interaction is null");
         this.unitsConverter = requireNonNull(unitsConverter, "unitConverter is null");
     }
 
@@ -30,17 +30,17 @@ public class SpeedCheckCommand implements Command {
                 .map(Units::getCode)
                 .collect(joining(", ", "(", ")"));
 
-        System.out.print("Введите размер передачи в битах или укажите единицы изменерения" + availableUnits + ": ");
-        final long size = unitsConverter.toBits(scanner.next());
+        final long size = unitsConverter.toBits(interaction.askForString(
+                "Введите размер передачи в битах или укажите единицы изменерения" + availableUnits + ": "));
 
-        System.out.print("Введите скорость передачи в битах в секунду или укажите единицы" + availableUnits + ": ");
-        final long speed = unitsConverter.toBits(scanner.next());
+        final long speed = unitsConverter.toBits(interaction.askForString(
+                "Введите скорость передачи в битах в секунду или укажите единицы" + availableUnits + ": "));
 
         final Range range = rangeReader.read().stream()
                 .filter(it -> it.contains(size / speed))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Range not found"));
 
-        System.out.println(range.getDescription());
+        interaction.message(range.getDescription() + "\n");
     }
 }

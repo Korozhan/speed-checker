@@ -5,6 +5,8 @@ import com.company.test.command.CommandName;
 import com.company.test.command.UnitsConverter;
 import com.company.test.serializer.CsvRangeSerializer;
 import com.company.test.serializer.RangeSerializer;
+import com.company.test.user.ConsoleUserInteraction;
+import com.company.test.user.UserInteraction;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -44,18 +46,20 @@ public class SpeedCheckerApplication {
         final Path configPath = resolveConfigPath();
         final UnitsConverter unitsConverter = new UnitsConverter();
         final Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+        final UserInteraction interaction = new ConsoleUserInteraction(scanner);
         final RangeSerializer serializer = new CsvRangeSerializer();
 
-        final CommandFactory commandFactory = new CommandFactory(configPath, scanner, serializer, unitsConverter);
+        final CommandFactory commandFactory = new CommandFactory(configPath, interaction, serializer, unitsConverter);
 
         if (isEmptyConfiguration(configPath)) {
             commandFactory.createByName(CommandName.CONFIGURE).run();
+            commandFactory.createByName(CommandName.SPEED_CHECK).run();
         } else {
             final Optional<CommandName> commandName = parseCommandName(args);
             if (commandName.isPresent()) {
                 commandFactory.createByName(commandName.get()).run();
             } else {
-                System.out.println("Неизвестная команда, ознакомьтесь с инструкцией.");
+                interaction.message("Неизвестная команда, ознакомьтесь с инструкцией.\n");
                 commandFactory.createByName(CommandName.HELP).run();
             }
         }
